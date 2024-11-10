@@ -16,12 +16,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        $superAdminRole = Role::where('name', 'super-admin')->first();
-        $managerRole = Role::where('name', 'manager')->first();
+        $superAdminRole = Role::firstOrCreate(['name' => 'super-admin']);
+        $managerRole = Role::firstOrCreate(['name' => 'manager']);
+
 
         User::factory()->count(10)->create()->each(function($user) use ($superAdminRole, $managerRole) {
             $roleID = $user->id % 2 == 0 ? $superAdminRole :$managerRole;
-            $user->roles()->attach($roleID);
+            $user->Roles()->attach($roleID);
         });
 
         // Seed Posts

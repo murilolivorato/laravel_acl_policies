@@ -10,7 +10,7 @@ use Illuminate\Auth\Access\Response;
 class PostPolicy
 {
     public function view(User $user) {
-        if ($user->tokenCan(Abilities::CreatePost) || $user->tokenCan(Abilities::CreateOwnPost)) {
+        if ($user->tokenCan(Abilities::ViewPost) || $user->tokenCan(Abilities::ViewOwnPost)) {
             return Response::allow();
         }
 
@@ -18,8 +18,8 @@ class PostPolicy
     }
 
     public function show(User $user, Post $post) {
-        $canShowAll = $user->tokenCan(Abilities::UpdatePost);
-        $canShowOwn = $user->tokenCan(Abilities::UpdateOwnPost);
+        $canShowAll = $user->tokenCan(Abilities::ShowPost);
+        $canShowOwn = $user->tokenCan(Abilities::ShowOwnPost);
         $isOwner = $post->user_id === $user->id;
 
         if ($canShowAll || ($canShowOwn && $isOwner)) {

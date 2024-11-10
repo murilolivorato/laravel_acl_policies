@@ -1,66 +1,454 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel API Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is a Laravel-based API project that includes user authentication using ACL and Policies.
 
-## About Laravel
+## Installation
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/your-username/your-repo.git
+    cd your-repo
+    ```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+2. Install dependencies:
+    ```bash
+    composer install
+    npm install
+    ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+3. Copy the `.env.example` file to `.env` and configure your environment variables:
+    ```bash
+    cp .env.example .env
+    ```
 
-## Learning Laravel
+4. Run the database migrations:
+    ```bash
+    php artisan migrate
+    ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+5. Seed the database :
+    ```bash
+    php artisan db:seed
+    ```
+   
+## Usage
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Authentication
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Login**
+    ```http
+    POST /login
+    ```
+  Request body:
+    ```json
+    {
+        "email": "user@example.com",
+        "password": "password"
+    }
+    ```
 
-## Laravel Sponsors
+- **Logout**
+    ```http
+    POST /logout
+    ```
+  Headers:
+    ```http
+    Authorization: Bearer {token}
+    ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Users
 
-### Premium Partners
+- **Get Users**
+    ```http
+    GET /users
+    ```
+  Headers:
+    ```http
+    Authorization: Bearer {token}
+    ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- **Get User**
+    ```http
+    GET /users/{user_id}
+    ```
+  Headers:
+    ```http
+    Authorization: Bearer {token}
+    ```
 
-## Contributing
+- **Create User**
+    ```http
+    POST /users
+    ```
+  Headers:
+    ```http
+    Authorization: Bearer {token}
+    Content-Type: application/json
+    ```
+  Request body:
+    ```json
+    {
+        "name": "New User",
+        "email": "newuser@example.com",
+        "password": "password"
+    }
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Update User**
+    ```http
+    PUT /users/{user_id}
+    ```
+  Headers:
+    ```http
+    Authorization: Bearer {token}
+    Content-Type: application/json
+    ```
+  Request body:
+    ```json
+    {
+        "name": "Updated User",
+        "email": "updateduser@example.com"
+    }
+    ```
 
-## Code of Conduct
+- **Delete User**
+    ```http
+    DELETE /users/{user_id}
+    ```
+  Headers:
+    ```http
+    Authorization: Bearer {token}
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Posts
 
-## Security Vulnerabilities
+- **Get Posts**
+    ```http
+    GET /posts
+    ```
+  Headers:
+    ```http
+    Authorization: Bearer {token}
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Get Post**
+    ```http
+    GET /posts/{post_id}
+    ```
+  Headers:
+    ```http
+    Authorization: Bearer {token}
+    ```
 
-## License
+- **Create Post**
+    ```http
+    POST /posts
+    ```
+  Headers:
+    ```http
+    Authorization: Bearer {token}
+    Content-Type: application/json
+    ```
+  Request body:
+    ```json
+    {
+        "title": "New Post",
+        "content": "Post content"
+    }
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Update Post**
+    ```http
+    PUT /posts/{post_id}
+    ```
+  Headers:
+    ```http
+    Authorization: Bearer {token}
+    Content-Type: application/json
+    ```
+  Request body:
+    ```json
+    {
+        "title": "Updated Post",
+        "content": "Updated content"
+    }
+    ```
+
+- **Delete Post**
+    ```http
+    DELETE /posts/{post_id}
+    ```
+  Headers:
+    ```http
+    Authorization: Bearer {token}
+    ```
+
+###  Postman Files
+```
+{
+  "info": {
+    "name": "API Collection",
+    "_postman_id": "unique-id",
+    "description": "API collection for User and Post routes",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": ["{{base_url}}"],
+              "path": ["logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated User\",\n  \"email\": \"updateduser@example.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Posts",
+      "item": [
+        {
+          "name": "Get Posts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts",
+              "host": ["{{base_url}}"],
+              "path": ["posts"]
+            }
+          }
+        },
+        {
+          "name": "Get Post",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts/{{post_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "{{post_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts",
+              "host": ["{{base_url}}"],
+              "path": ["posts"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"New Post\",\n  \"content\": \"Post content\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Post",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts/{{post_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "{{post_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Post\",\n  \"content\": \"Updated content\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts/{{post_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "{{post_id}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+
+```
