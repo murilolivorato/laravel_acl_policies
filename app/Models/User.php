@@ -45,8 +45,27 @@ class User extends Authenticatable
         ];
     }
 
-    public function role()
+   /* public function role()
     {
         return $this->belongsTo(Role::class);
+    }*/
+
+    public function Roles(){
+        return $this->belongsToMany(Role::class , 'user_roles' , 'user_id' , 'role_id' );
+    }
+
+
+    public function hasRole($role){
+        if(is_string($role)){
+            return $this->Roles->contains('title', $role);
+        }
+    }
+
+    public function getisSuperAdminAttribute(){
+        return $this->hasRole('super-admin');
+    }
+
+    public function getisManagerAttribute(){
+        return $this->hasRole('manager');
     }
 }

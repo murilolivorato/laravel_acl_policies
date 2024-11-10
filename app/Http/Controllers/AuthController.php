@@ -1,22 +1,30 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Permissions\Abilities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\LoginUserRequest;
 use App\Models\User;
+use App\Traits\ApiResponse;
 class AuthController extends Controller
 {
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('auth_token')->plainTextToken;
-            return response()->json(['access_token' => $token, 'token_type' => 'Bearer']);
+    public function login(LoginUserRequest $request) {
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return $this->error('Invalid credentials', 401);
         }
 
-        return response()->json(['message' => 'Unauthorized'], 401);
+        $user = User::firstWhere('email', $request->email);
+
+        return $this->successResponse(
+            'Authenticated',
+            [
+                'token' => $user->createToken(
+                    'API token for ' . $user->email,
+                    Abilities::getAbilities($user),
+                    now()->addMonth())->plainTextToken
+            ]
+        );
     }
 
     public function logout(Request $request)
