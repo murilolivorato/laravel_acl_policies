@@ -1,6 +1,8 @@
 # Laravel API Project
-
 This is a Laravel-based API project that includes user authentication using ACL and Policies.
+
+you can chck more information in -
+https://medium.com/@murilolivorato/getting-started-with-laravel-policies-how-to-control-access-a-step-by-step-guide-3bb080fe3762
 
 ## Installation
 
