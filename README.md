@@ -1,564 +1,162 @@
-# Laravel API Project
-This is a Laravel-based API project that includes user authentication using ACL and Policies.
+# Getting Started with Laravel Policies: A Step-by-Step Guide
 
-you can chck more information in -
-https://medium.com/@murilolivorato/getting-started-with-laravel-policies-how-to-control-access-a-step-by-step-guide-3bb080fe3762
+A comprehensive guide and implementation of Laravel Policies for managing authorization in Laravel applications. This project demonstrates how to implement role-based access control (RBAC) using Laravel's policy system.
+
+<p align="center">
+    <br />
+<img src="https://miro.medium.com/v2/resize:fit:700/1*lJXgnAuSjx-ai7VbUlMiIA.png" alt="Intro" /><br />
+</p>
+
+## Overview
+
+Here I  shows how to implement a robust authorization system in Laravel using Policies. It includes:
+- Role-based access control
+- User and Post management
+- API authentication using Laravel Sanctum
+- Policy-based authorization for different user roles
+
+
+
+
+## Prerequisites
+
+- PHP 8.1 or higher
+- Composer
+- MySQL or another database system
+- Laravel 10.x
 
 ## Installation
 
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/your-username/your-repo.git
-    cd your-repo
-    ```
+```bash
+git clone https://github.com/murilolivorato/laravel_acl_policies.git
+cd laravel_acl_policies
+```
 
 2. Install dependencies:
-    ```bash
-    composer install
-    npm install
-    ```
+```bash
+composer install
+```
 
-3. Copy the `.env.example` file to `.env` and configure your environment variables:
-    ```bash
-    cp .env.example .env
-    ```
+3. Create and configure your `.env` file:
+```bash
+cp .env.example .env
+```
 
-4. Run the database migrations:
-    ```bash
-    php artisan migrate
-    ```
+4. Generate application key:
+```bash
+php artisan key:generate
+```
 
-5. Seed the database :
-    ```bash
-    php artisan db:seed
-    ```
-   
-## Usage
+5. Run migrations and seed the database:
+```bash
+php artisan migrate
+php artisan db:seed
+```
+
+6. Install Laravel Sanctum:
+```bash
+composer require laravel/sanctum
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+```
+
+## Project Structure
+
+The project implements a role-based authorization system with the following key components:
+
+### Models
+- `User` - Handles user authentication and role relationships
+- `Role` - Manages user roles
+- `Post` - Represents blog posts with user ownership
+
+### Policies
+- `PostPolicy` - Controls access to post-related actions
+- `UserPolicy` - Manages user-related permissions
+
+### Key Features
+
+1. **Role-Based Access Control**
+   - Super Admin role with full access
+   - Manager role with limited access
+   - Custom role permissions
+
+2. **Policy Implementation**
+   - View permissions
+   - Create/Update permissions
+   - Delete permissions
+   - Own resource management
+
+3. **API Authentication**
+   - Token-based authentication using Sanctum
+   - Role-specific abilities
+   - Secure API endpoints
+
+## API Endpoints
 
 ### Authentication
-
-- **Login**
-    ```http
-    POST /login
-    ```
-  Request body:
-    ```json
-    {
-        "email": "user@example.com",
-        "password": "password"
-    }
-    ```
-
-- **Logout**
-    ```http
-    POST /logout
-    ```
-  Headers:
-    ```http
-    Authorization: Bearer {token}
-    ```
+- `POST /api/login` - User login
+- `POST /api/logout` - User logout (requires authentication)
 
 ### Users
-
-- **Get Users**
-    ```http
-    GET /users
-    ```
-  Headers:
-    ```http
-    Authorization: Bearer {token}
-    ```
-
-- **Get User**
-    ```http
-    GET /users/{user_id}
-    ```
-  Headers:
-    ```http
-    Authorization: Bearer {token}
-    ```
-
-- **Create User**
-    ```http
-    POST /users
-    ```
-  Headers:
-    ```http
-    Authorization: Bearer {token}
-    Content-Type: application/json
-    ```
-  Request body:
-    ```json
-    {
-        "name": "New User",
-        "email": "newuser@example.com",
-        "password": "password"
-    }
-    ```
-
-- **Update User**
-    ```http
-    PUT /users/{user_id}
-    ```
-  Headers:
-    ```http
-    Authorization: Bearer {token}
-    Content-Type: application/json
-    ```
-  Request body:
-    ```json
-    {
-        "name": "Updated User",
-        "email": "updateduser@example.com"
-    }
-    ```
-
-- **Delete User**
-    ```http
-    DELETE /users/{user_id}
-    ```
-  Headers:
-    ```http
-    Authorization: Bearer {token}
-    ```
+- `GET /api/users` - List users
+- `GET /api/users/{user}` - Get specific user
+- `POST /api/users` - Create user
+- `PUT /api/users/{user}` - Update user
+- `DELETE /api/users/{user}` - Delete user
 
 ### Posts
+- `GET /api/posts` - List posts
+- `GET /api/posts/{post}` - Get specific post
+- `POST /api/posts` - Create post
+- `PUT /api/posts/{post}` - Update post
+- `DELETE /api/posts/{post}` - Delete post
 
-- **Get Posts**
-    ```http
-    GET /posts
-    ```
-  Headers:
-    ```http
-    Authorization: Bearer {token}
-    ```
+## Usage Examples
 
-- **Get Post**
-    ```http
-    GET /posts/{post_id}
-    ```
-  Headers:
-    ```http
-    Authorization: Bearer {token}
-    ```
+### Manager Role
+- Can view own user profile
+- Can create, update, and delete own posts
+- Can view own posts
 
-- **Create Post**
-    ```http
-    POST /posts
-    ```
-  Headers:
-    ```http
-    Authorization: Bearer {token}
-    Content-Type: application/json
-    ```
-  Request body:
-    ```json
-    {
-        "title": "New Post",
-        "content": "Post content"
-    }
-    ```
+### Super Admin Role
+- Can view all users
+- Can manage all posts
+- Full access to all resources
 
-- **Update Post**
-    ```http
-    PUT /posts/{post_id}
-    ```
-  Headers:
-    ```http
-    Authorization: Bearer {token}
-    Content-Type: application/json
-    ```
-  Request body:
-    ```json
-    {
-        "title": "Updated Post",
-        "content": "Updated content"
-    }
-    ```
+## Testing the API
 
-- **Delete Post**
-    ```http
-    DELETE /posts/{post_id}
-    ```
-  Headers:
-    ```http
-    Authorization: Bearer {token}
-    ```
-
-###  Postman Files
+1. Login to get your authentication token:
+```bash
+curl -X POST http://your-domain/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"password"}'
 ```
-{
-	"info": {
-		"_postman_id": "b9adee5b-c58e-4603-a994-3cacc3f80f86",
-		"name": "Laravel Policies",
-		"description": "API collection for User and Post routes",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "9356399"
-	},
-	"item": [
-		{
-			"name": "Auth",
-			"item": [
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"juana.kuvalis@example.org\",\n  \"password\": \"password\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/login",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/logout",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"logout"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Users",
-			"item": [
-				{
-					"name": "Get Users",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/users",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get User",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/users/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create User",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/users",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update User",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"Updated User\",\n  \"email\": \"updateduser2@example.com\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/users/41",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"41"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete User",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/users/41",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"41"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Posts",
-			"item": [
-				{
-					"name": "Get Posts",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/posts",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"posts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Post",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/posts/34",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"posts",
-								"34"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Post",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"title\": \"New Post\",\n  \"content\": \"Post content\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/posts",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"posts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Post",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"title\": \"Updated Post\",\n  \"content\": \"Updated content\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/posts/33",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"posts",
-								"33"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Post",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/posts/33",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"posts",
-								"33"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "2|QNoLbgptc0r4SMCzvRdtG1glGXl31wcg8Abwddo8dfc858a8",
-				"type": "string"
-			}
-		]
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "base_url",
-			"value": "localhost:8081",
-			"type": "string"
-		}
-	]
-}
 
+2. Use the token for authenticated requests:
+```bash
+curl -X GET http://your-domain/api/posts \
+  -H "Authorization: Bearer {your-token}"
 ```
+
+## Author
+
+**Murilo Livorato**
+- GitHub: [murilolivorato](https://github.com/murilolivorato)
+- LinkedIn: [Murilo Livorato](https://www.linkedin.com/in/murilo-livorato-80985a4a/)
+
+## License
+
+This project is open-sourced software licensed under the MIT license.
+
+## Acknowledgments
+
+This tutorial was inspired by concepts from Jeremy McPeak's Laravel API Master Class on Laracasts.
+
+
+<div align="center">
+  <h3>⭐ Star This Repository ⭐</h3>
+  <p>Your support helps us improve and maintain this project!</p>
+  <a href="https://github.com/murilolivorato/laravel_acl_policies/stargazers">
+    <img src="https://img.shields.io/github/stars/murilolivorato/laravel_acl_policies?style=social" alt="GitHub Stars">
+  </a>
+</div>
